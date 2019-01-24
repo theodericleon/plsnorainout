@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, redirect, url_for
 
 def create_app(test_config=None):
     # create and configure app
@@ -28,6 +28,10 @@ def create_app(test_config=None):
     @app.route('/maintenance')
     def maintenance():
         return 'Under maintenance, come back soon!'
+
+    @app.route('/dashboard')
+    def dashboard():
+        return redirect(url_for('maintenance'))
 
     from . import db
     db.init_app(app)
