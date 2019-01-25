@@ -37,7 +37,7 @@ def create_app(test_config=None):
     # maintenance page
     @app.route('/maintenance')
     def maintenance():
-        return 'Under maintenance, come back soon!'
+        return render_template('maintenance.html')
 
     @app.route('/dashboard')
     def dashboard():
