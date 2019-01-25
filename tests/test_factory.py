@@ -10,7 +10,12 @@ def test_testresponse(client):
 
 def test_maintenance(client):
     response = client.get('maintenance')
-    assert response.data == b'Under maintenance, come back soon!'
+    assert response.get('/maintenance').status_code == 200
 
 def test_index(client, app):
     assert client.get('/').status_code == 200
+
+def test_dashboard(client, app):
+    response = client.get('/dashboard')
+    assert response.status_code == 200
+    assert response.headers['Location'] == 'http://localhost/maintenance'
