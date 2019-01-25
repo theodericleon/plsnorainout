@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, render_template
 
 def create_app(test_config=None):
     # create and configure app
@@ -23,6 +23,11 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    # index page
+    @app.route('/')
+    def index():
+        return render_template('index.html')
 
     # maintenance page
     @app.route('/maintenance')
