@@ -81,7 +81,7 @@ def register():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('index'))
 
 def login_required(view):
     @functools.wraps(view)

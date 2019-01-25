@@ -49,5 +49,6 @@ def test_logout(client, auth):
     auth.login()
 
     with client:
-        auth.logout()
+        response = auth.logout()
         assert 'user_id' not in session
+        assert response.headers['Location'] == 'http://localhost/'
