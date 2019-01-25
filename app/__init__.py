@@ -24,6 +24,11 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    # test route
+    @app.route('/testing')
+    def testresponse():
+        return('Testing! Testing! Testing!')
+
     # index page
     @app.route('/')
     def index():
