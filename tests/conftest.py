@@ -51,19 +51,11 @@ class AuthActions(object):
 def auth(client):
         return AuthActions(client)
 
-@pytest.mark.usefixtures('live_server')
-class TestServer(object):
-    def __init__(self, live_server):
-        self._live_server = live_server
-
-@pytest.fixture
-def test_server(live_server):
-    return TestServer(live_server)
-
-@pytest.fixture
-def sel_driver(client, test_server):
+@pytest.fixture(scope="session")
+def sel_driver(client):
     from selenium import webdriver
-    sel_driver = webdriver.Chrome('C:/Users/Derrick Milner/Documents/chromedriver.exe')
+    sel_driver = webdriver.Chrome()
+    sel_driver.get(url_for('index'))
 
     yield sel_driver
-    sel_driver.quit()
+    sel_driver.close()
