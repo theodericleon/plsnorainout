@@ -1,14 +1,7 @@
 import os
 import tempfile
-import time
-import multiprocessing
-import socket
-import signal
-import logging
 
 import pytest
-from flask import Flask
-from flask_testing import LiveServerTestCase
 from app import create_app
 from app.db import get_db, init_db
 
@@ -58,26 +51,19 @@ class AuthActions(object):
 def auth(client):
         return AuthActions(client)
 
-class LiveServer(LiveServerTestCase):
-    def create_app(self):
-        app = Flask(__name__)
-        app.config['TESTING'] = True
-        app.config['LIVESERVER_TIMEOUT'] = 15
-
-        with app.app_context():
-            init_db()
-            get_db().executescript(_data_sql)
-
-        return app
+@pytest.mark.usefixtures('live_server')
+class TestServer(object):
+    def __init__(self, live_server):
+        self._live_server = live_server
 
 @pytest.fixture
-def live_server():
-    return LiveServer()
+def test_server(live_server):
+    return TestServer(live_server)
 
 @pytest.fixture
-def sel_driver(client, live_server):
+def sel_driver(client, test_server):
     from selenium import webdriver
     sel_driver = webdriver.Chrome('C:/Users/Derrick Milner/Documents/chromedriver.exe')
-    sel_driver.get('http://localhost/:5000')
+
     yield sel_driver
     sel_driver.quit()
