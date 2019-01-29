@@ -50,12 +50,3 @@ class AuthActions(object):
 @pytest.fixture
 def auth(client):
         return AuthActions(client)
-
-@pytest.fixture(scope="session")
-def sel_driver(client):
-    from selenium import webdriver
-    sel_driver = webdriver.Chrome()
-    sel_driver.get(url_for('index'))
-
-    yield sel_driver
-    sel_driver.close()
