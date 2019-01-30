@@ -108,3 +108,9 @@ class LiveServer(object):
 
     def __repr__(self):
         return '<LiveServer listening at %s>' % self.url()
+
+def _rewrite_server_name(server_name, new_port):
+    sep = ':'
+    if sep in server_name:
+        server_name, port = server_name.split(sep, 1)
+    return sep.join((server_name, new_port))
