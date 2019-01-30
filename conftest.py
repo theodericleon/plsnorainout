@@ -114,7 +114,3 @@ def _rewrite_server_name(server_name, new_port):
     if sep in server_name:
         server_name, port = server_name.split(sep, 1)
     return sep.join((server_name, new_port))
-
-@pytest.fixture(scope='function')
-def live_server(request, app, monkeypatch, pytestconfig):
-    
