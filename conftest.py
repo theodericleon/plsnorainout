@@ -1,8 +1,5 @@
 import os
 import tempfile
-import time
-import pathos.multiprocessing
-import logging
 
 import pytest
 from app import create_app
@@ -53,52 +50,3 @@ class AuthActions(object):
 @pytest.fixture
 def auth(client):
         return AuthActions(client)
-
-class LiveServer(object):
-    def __init__(self, app, host, port, clean_stop=False):
-        self.app = app
-        self.port = port
-        self.host = host
-        self.clean_stop = clean_stop
-        self._process = None
-
-    def start(self):
-        def worker(app, host, port):
-            app.run(host=host, port=port, use_reloader=False, threaded=True)
-
-        self._process = multiprocessing.Process(
-            target=worker,
-            args=(self.app, self.host, self.port)
-        )
-        self._process.start()
-
-        timeout = 5
-        while timeout > 0:
-            time.sleep(1)
-            try:
-                urlopen(self.url())
-                timeout = 0
-            except URLError:
-                timeout -= 1
-
-    def url(self, url=''):
-        return 'http://%s:%d%s' % (self.host, self.port, url)
-
-    def stop(self):
-        if self._process:
-            if self.clean_stop and self._stop_cleanly():
-                return
-            if self._process.is_alive():
-                self._process.terminate()
-
-    def _stop_cleanly(self, timeout=5):
-        try:
-            os.kill(self._process.pid, signal.SIGINT)
-            self._process.join(timeout)
-            return True
-        except Exception as ex:
-            logging.error('Failed to join the live server process: %r', ex)
-            return False
-
-    def __repr__(self):
-        return '<LiveServer listening at %s>' % self.url()
