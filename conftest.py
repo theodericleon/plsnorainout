@@ -4,12 +4,6 @@ import time
 import pathos.multiprocessing
 import logging
 
-try:
-    from urllib2 import URLError, urlopen
-except ImportError:
-    from urllib.error import URLError
-    from urllib.request import urlopen
-
 import pytest
 from app import create_app
 from app.db import get_db, init_db
