@@ -5,15 +5,6 @@ import urllib3
 
 class BaseUITests(live_server.SeleniumTestCase):
 
-    def create_app(self):
-        super()
-
-    def setUp(self):
-        super()
-
-    def tearDown(self):
-        super()
-
     def test_server_is_up_and_running(self):
         response = urllib3.urlopen(self.get_server_url())
         assert response.code == 200

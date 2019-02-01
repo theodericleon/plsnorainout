@@ -11,7 +11,7 @@ import pytest
 import os
 import tempfile
 from flask import Flask
-from app import create_app
+import app
 from app.db import get_db, init_db
 from selenium import webdriver
 
@@ -22,7 +22,10 @@ using pathos multiprocessing instead (because Winders)
 
 class LiveServerTestCase(unittest.TestCase):
     def create_app(self):
-        raise NotImplementedError
+        self.app = app.create_app({
+            'TESTING': True,
+            'LIVESERVER_TIMEOUT': 15
+        })
 
     def __call__(self, result=None):
         self.app = self.create_app()
@@ -124,11 +127,8 @@ class LiveServerTestCase(unittest.TestCase):
             self._process.terminate()
 
 class SeleniumTestCase(LiveServerTestCase):
-    def create_app(self):
-        super()
 
     def setUp(self):
-        self.app = self.create_app()
 
         self.db_fd, self.db_path = tempfile.mkstemp()
 
