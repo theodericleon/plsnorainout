@@ -1,13 +1,16 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from flask_sqlalchemy import SQLAlchemy
 
-engine = create_engine('sqlite:///tmp/test.db', convert_unicode=True)
-db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False,bind=engine))
+db = SQLAlchemy()
 
-Base = declarative_base()
-Base.query = db_session.query_property()
+def init_database():
 
-def init_db():
-    # import app.models
-    # Base.metadata.create_all(bind=engine)
+    with current_app.app_context():
+        db.drop_all()
+        db.create_all()
+
+@click.command('init-database')
+@with_appcontext
+def init_database_command():
+    """Clear the exisiting data and create new tables."""
+    init_database()
+    click.echo('Initialized the database.')

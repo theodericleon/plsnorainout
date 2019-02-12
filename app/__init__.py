@@ -1,9 +1,7 @@
 import os
 
 from flask import Flask, redirect, url_for, render_template
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from app.database import db, init_database_command
 
 def create_app(test_config=None):
     # create and configure app
@@ -47,6 +45,7 @@ def create_app(test_config=None):
         return redirect(url_for('maintenance'))
 
     db.init_app(app)
+    app.cli.add_command(init_database_command)
 
     from . import auth
     app.register_blueprint(auth.bp)
