@@ -1,6 +1,7 @@
 import pytest
 from flask import g, session
 from app.db import get_db
+from app.models import User
 
 def test_register(client, app):
     assert client.get('/auth/register').status_code == 200
@@ -10,9 +11,7 @@ def test_register(client, app):
     assert 'http://localhost/auth/login' == response.headers['Location']
 
     with app.app_context():
-        assert get_db().execute(
-            "select * from user where username = 'a' ",
-        ).fetchone() is not None
+        assert User.query.filter_by(username='a').first() is not None
 
 @pytest.mark.parametrize(('username', 'password','zip_code', 'message'), [
     ('', '', '', b'Username is required.'),
