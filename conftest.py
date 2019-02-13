@@ -4,9 +4,8 @@ import tempfile
 import pytest
 from app import create_app
 from app.db import get_db, init_db
-
-with open(os.path.join(os.path.dirname(__file__), 'tests/data.sql'), 'rb') as f:
-    _data_sql = f.read().decode('utf8')
+from app.database import db, init_database
+from app.models import User
 
 @pytest.fixture
 def app():
@@ -14,12 +13,17 @@ def app():
 
     app = create_app({
         'TESTING': True,
-        'DATABASE':db_path,
+        'SQLALCHEMY_DATABASE_URI':db_path,
     })
 
     with app.app_context():
-        init_db()
-        get_db().executescript(_data_sql)
+        db.init_database()
+        test = User(username='test', password_hash='pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f', zip_code='11111')
+        other = User(username='other', password_hash='pbkdf2:sha256:50000$kJPKsz6N$d2d4784f1b030a9761f5ccaeeaca413f27f2ecb76d6168407af962ddce849f79', zip_code='99999')
+        db.session.add(test)
+        db.session.add(other)
+        db.session.commit()
+
 
     yield app
 
