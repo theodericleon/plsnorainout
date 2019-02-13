@@ -9,15 +9,17 @@ from app.models import User
 
 @pytest.fixture
 def app():
-    db_fd, db_path = tempfile.mkstemp()
 
     app = create_app({
         'TESTING': True,
-        'SQLALCHEMY_DATABASE_URI':db_path,
+        'SQLALCHEMY_DATABASE_URI':'sqlite:////tmp/test.db',
+        'SQLALCHEMY_TRACK_MODIFICATIONS': 'False',
     })
 
+    db.init_app(app)
+
     with app.app_context():
-        db.init_database()
+        init_database()
         test = User(username='test', password_hash='pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f', zip_code='11111')
         other = User(username='other', password_hash='pbkdf2:sha256:50000$kJPKsz6N$d2d4784f1b030a9761f5ccaeeaca413f27f2ecb76d6168407af962ddce849f79', zip_code='99999')
         db.session.add(test)
@@ -26,9 +28,6 @@ def app():
 
 
     yield app
-
-    os.close(db_fd)
-    os.unlink(db_path)
 
 @pytest.fixture
 def client(app):

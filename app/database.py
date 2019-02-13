@@ -1,4 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask import current_app
+import click
+from flask.cli import with_appcontext
 
 db = SQLAlchemy()
 
