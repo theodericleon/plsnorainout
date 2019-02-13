@@ -1,13 +1,15 @@
 import os
 
 from flask import Flask, redirect, url_for, render_template
+from app.database import db, init_database_command
 
 def create_app(test_config=None):
     # create and configure app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'app.sqlite'),
+        SQLALCHEMY_DATABASE_URI='sqlite:////tmp/dev.db',
+        SQLALCHEMY_TRACK_MODIFICATIONS='False'
     )
 
     if test_config is None:
@@ -43,8 +45,8 @@ def create_app(test_config=None):
     def dashboard():
         return redirect(url_for('maintenance'))
 
-    from . import db
     db.init_app(app)
+    app.cli.add_command(init_database_command)
 
     from . import auth
     app.register_blueprint(auth.bp)
