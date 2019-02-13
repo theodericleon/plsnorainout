@@ -1,6 +1,5 @@
 import pytest
 from flask import g, session
-from app.db import get_db
 from app.models import User
 
 def test_register(client, app):

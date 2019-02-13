@@ -3,7 +3,6 @@ import tempfile
 
 import pytest
 from app import create_app
-from app.db import get_db, init_db
 from app.database import db, init_database
 from app.models import User
 

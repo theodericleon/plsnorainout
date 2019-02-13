@@ -6,7 +6,6 @@ from flask import (
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app.db import get_db
 from app.models import User
 from app.database import db
 
