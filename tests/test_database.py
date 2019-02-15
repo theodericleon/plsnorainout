@@ -1,5 +1,6 @@
 import pytest
 from app.database import db
+from app.models import Mask
 
 def test_init_database_command(runner, monkeypatch):
     class Recorder(object):

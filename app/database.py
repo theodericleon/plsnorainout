@@ -6,7 +6,6 @@ from flask.cli import with_appcontext
 db = SQLAlchemy()
 
 def init_database():
-
     with current_app.app_context():
         db.drop_all()
         db.create_all()
