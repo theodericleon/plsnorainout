@@ -8,6 +8,7 @@ class User(db.Model):
     username = db.Column(db.String(60), unique = True, nullable = False)
     password_hash = db.Column(db.String(128), nullable = False)
     zip_code = db.Column(db.Integer, nullable = False)
+    mask_id = db.Column(db.Integer, db.ForeignKey('masks.id'), nullable = False)
 
 class Mask(db.Model):
     __tablename__ = 'masks'
@@ -16,3 +17,4 @@ class Mask(db.Model):
     mask_name = db.Column(db.String(60), nullable = False)
     manufacturer = db.Column(db.String(60), nullable = False)
     type = db.Column(db.String(60), nullable = False)
+    users = db.relationship('User', backref='masks', lazy=True)
