@@ -5,6 +5,7 @@ import pytest
 from app import create_app
 from app.database import db, init_database
 from app.models import User, Mask
+from app.database_utils import populate_database
 
 @pytest.fixture
 def app():
@@ -19,10 +20,7 @@ def app():
 
     with app.app_context():
         init_database()
-        mask1 = Mask(mask_name = 'Simplus Full Face', manufacturer = 'Fisher & Paykel', type = 'FullFace')
-        mask2 = Mask(mask_name = 'AirFit N20', manufacturer = 'ResMed', type = 'NasalMask')
-        db.session.add(mask1)
-        db.session.add(mask2)
+        populate_database()
         test = User(username='test', password_hash='pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f', zip_code='11111', mask_id='1')
         other = User(username='other', password_hash='pbkdf2:sha256:50000$kJPKsz6N$d2d4784f1b030a9761f5ccaeeaca413f27f2ecb76d6168407af962ddce849f79', zip_code='99999', mask_id='2')
         db.session.add(test)
