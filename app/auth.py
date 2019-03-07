@@ -6,7 +6,7 @@ from flask import (
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app.models import User
+from app.models import User, Mask
 from app.database import db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -43,6 +43,7 @@ def login():
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    masks = Mask.query.all()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
